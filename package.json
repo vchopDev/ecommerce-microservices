@@ -1,0 +1,12 @@
+{
+    "name": "ecommerce-microservices",
+    "private": true,
+    "workspaces": [
+        "services/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "build:all": "npm run build --workspaces",
+        "lint:all": "npm run lint --workspaces"
+    }
+}
