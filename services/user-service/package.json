@@ -17,7 +17,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:unit": "jest --testPathPattern=spec",
+    "test:e2e": "dotenv -e .env.test -- jest --config ./test/jest-e2e.json --runInBand --forceExit",
+    "test:e2e:watch": "dotenv -e .env.test -- jest --config ./test/jest-e2e.json --watch",
+    "migrate:test": "dotenv -e .env.test -- prisma migrate deploy"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -49,6 +52,7 @@
     "@types/node": "^24.0.0",
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^7.0.0",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",

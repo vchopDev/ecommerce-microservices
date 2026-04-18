@@ -38,6 +38,18 @@ Users   Catalog    Cart     Orders       Payments
 - Docker + Docker Compose
 - npm 10+
 
+## Docker
+
+Local development only. Production uses a managed cloud database.
+
+```bash
+# start dev database
+docker compose up -d
+
+# start test database
+docker compose -f docker-compose.test.yml up -d
+```
+
 ### Run a service in development
 
 ```bash
