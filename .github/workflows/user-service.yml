@@ -65,3 +65,7 @@ jobs:
           JWT_SECRET: test-secret
           JWT_EXPIRES_IN: 7d
         run: npm run test:e2e
+
+      - name: Build Docker image
+        working-directory: services/user-service
+        run: docker build -t user-service:${{ github.sha }} .
