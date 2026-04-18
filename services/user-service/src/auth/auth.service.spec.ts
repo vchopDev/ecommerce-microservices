@@ -78,6 +78,31 @@ describe('AuthService', () => {
 
       expect(bcrypt.hash).toHaveBeenCalledWith('password123', 10);
     });
+
+    it('should not return password in response', async () => {
+      mockUsersService.findByEmail.mockResolvedValue(null);
+      mockUsersService.create.mockResolvedValue(mockUser);
+
+      const result = await authService.register(
+        'victor@test.com',
+        'password123',
+        'Victor',
+      );
+
+      expect(result.user).not.toHaveProperty('password');
+    });
+
+    it('should call jwt.sign with correct payload on register', async () => {
+      mockUsersService.findByEmail.mockResolvedValue(null);
+      mockUsersService.create.mockResolvedValue(mockUser);
+
+      await authService.register('victor@test.com', 'password123', 'Victor');
+
+      expect(mockJwtService.sign).toHaveBeenCalledWith({
+        sub: 'uuid-123',
+        email: 'victor@test.com',
+      });
+    });
   });
 
   describe('login', () => {
@@ -107,6 +132,49 @@ describe('AuthService', () => {
       await expect(
         authService.login('victor@test.com', 'wrongpassword'),
       ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('should call bcrypt.compare with correct arguments', async () => {
+      mockUsersService.findByEmail.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await authService.login('victor@test.com', 'password123');
+
+      expect(bcrypt.compare).toHaveBeenCalledWith('password123', 'hashedpassword');
+    });
+
+    it('should call jwt.sign with correct payload', async () => {
+      mockUsersService.findByEmail.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await authService.login('victor@test.com', 'password123');
+
+      expect(mockJwtService.sign).toHaveBeenCalledWith({
+        sub: 'uuid-123',
+        email: 'victor@test.com',
+      });
+    });
+
+    it('should return access_token', async () => {
+      mockUsersService.findByEmail.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      const result = await authService.login('victor@test.com', 'password123');
+
+      expect(result.access_token).toBe('mock-jwt-token');
+    });
+
+    it('should return user', async () => {
+      mockUsersService.findByEmail.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      const result = await authService.login('victor@test.com', 'password123');
+
+      expect(result.user).toEqual({
+        id: 'uuid-123',
+        email: 'victor@test.com',
+        name: 'Victor',
+      });
     });
   });
 });
