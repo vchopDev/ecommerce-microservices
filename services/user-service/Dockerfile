@@ -11,9 +11,11 @@ RUN npm ci --workspace=services/user-service
 COPY services/user-service/src ./services/user-service/src
 COPY services/user-service/tsconfig*.json ./services/user-service/
 COPY services/user-service/nest-cli.json ./services/user-service/
+COPY services/user-service/prisma.config.ts ./services/user-service/
 
 WORKDIR /app/services/user-service
 
+RUN npx prisma generate
 RUN npm run build
 
 FROM node:22-alpine AS production
