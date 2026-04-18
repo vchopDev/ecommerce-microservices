@@ -48,6 +48,10 @@ jobs:
         working-directory: services/user-service
         run: npm ci --prefix ../..
 
+      - name: Generate Prisma client
+        working-directory: services/user-service
+        run: npx prisma generate
+
       - name: Run unit tests
         working-directory: services/user-service
         run: npm run test:unit
