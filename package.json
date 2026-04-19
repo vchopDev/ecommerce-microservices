@@ -6,7 +6,7 @@
         "packages/*"
     ],
     "scripts": {
-        "start:all": "concurrently \"npm run start:dev --workspace=@app/user-service\" \"npm run start:dev --workspace=@app/catalog-service\"",
+        "start:all": "concurrently --names \"USER,CATALOG\" --prefix-colors \"blue,green\" \"npm run start:dev --workspace=@app/user-service\" \"npm run start:dev --workspace=@app/catalog-service\"",
         "build:all": "npm run build --workspaces",
         "lint:all": "npm run lint --workspaces"
     },
