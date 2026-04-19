@@ -38,6 +38,15 @@ Users   Catalog    Cart     Orders       Payments
 - Docker + Docker Compose
 - npm 10+
 
+## Environment setup
+
+Each service has a `.env.example` file. Copy it to `.env` and fill in your values:
+
+```bash
+cp services/user-service/.env.example services/user-service/.env
+cp services/catalog-service/.env.example services/catalog-service/.env
+```
+
 ## Docker
 
 Local development only. Production uses a managed cloud database.
