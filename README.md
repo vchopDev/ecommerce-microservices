@@ -47,18 +47,6 @@ cp services/user-service/.env.example services/user-service/.env
 cp services/catalog-service/.env.example services/catalog-service/.env
 ```
 
-## Docker
-
-Local development only. Production uses a managed cloud database.
-
-```bash
-# start dev database
-docker compose up -d
-
-# start test database
-docker compose -f docker-compose.test.yml up -d
-```
-
 ### Run a service in development
 
 ```bash
