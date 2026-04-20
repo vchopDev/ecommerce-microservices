@@ -1,0 +1,11 @@
+.env
+.env.test
+.env.*
+node_modules
+dist
+coverage
+test
+*.spec.ts
+*.md
+.git
+.github
