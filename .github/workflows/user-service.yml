@@ -48,7 +48,8 @@ jobs:
         run: npx prisma generate
 
       - name: Run unit tests
-        run: npx nx affected --target=test --projects=@app/user-service --base=origin/main --head=HEAD
+        working-directory: services/user-service
+        run: npm run test:unit
 
       - name: Run migrations
         working-directory: services/user-service
