@@ -4,7 +4,7 @@
   "workspaces": [
     "services/*",
     "packages/*",
-    "apps/*",
+    "apps/*"
   ],
   "scripts": {
     "start:all": "concurrently --names \"USER,CATALOG\" --prefix-colors \"blue,green\" \"npm run start:dev --workspace=@app/user-service\" \"npm run start:dev --workspace=@app/catalog-service\"",
