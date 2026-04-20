@@ -38,6 +38,15 @@ Users   Catalog    Cart     Orders       Payments
 - Docker + Docker Compose
 - npm 10+
 
+## Environment setup
+
+Each service has a `.env.example` file. Copy it to `.env` and fill in your values:
+
+```bash
+cp services/user-service/.env.example services/user-service/.env
+cp services/catalog-service/.env.example services/catalog-service/.env
+```
+
 ## Docker
 
 Local development only. Production uses a managed cloud database.
@@ -53,24 +62,34 @@ docker compose -f docker-compose.test.yml up -d
 ### Run a service in development
 
 ```bash
-cd services/user-service
+# install all dependencies from root
 npm install
+
+# start all services together
+npm run start:all
+
+# or start a single service
+cd services/user-service
 npm run start:dev
 ```
 
+**2. The services table links to services that don't exist yet** — `api-gateway`, `cart-service`, `order-service`, `payment-service`, `notification-service` will all be dead links on GitHub. Either remove them until they exist, or add a note:
+
+```markdown
 ## Services
 
 Each service has its own README with setup instructions, environment variables, and API docs.
 
-| Service | Path |
-|---|---|
-| API Gateway | [`services/api-gateway`](./services/api-gateway) |
-| User service | [`services/user-service`](./services/user-service) |
-| Catalog service | [`services/catalog-service`](./services/catalog-service) |
-| Cart service | [`services/cart-service`](./services/cart-service) |
-| Order service | [`services/order-service`](./services/order-service) |
-| Payment service | [`services/payment-service`](./services/payment-service) |
-| Notification service | [`services/notification-service`](./services/notification-service) |
+| Service | Status | Path |
+|---|---|---|
+| User service | ✅ Done | [`services/user-service`](./services/user-service) |
+| Catalog service | 🚧 In progress | [`services/catalog-service`](./services/catalog-service) |
+| Cart service | 📋 Planned | — |
+| Order service | 📋 Planned | — |
+| Payment service | 📋 Planned | — |
+| Notification service | 📋 Planned | — |
+| API Gateway | 📋 Planned | — |
+```
 
 ## Progress
 
