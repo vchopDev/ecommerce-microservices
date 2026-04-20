@@ -1,13 +1,19 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '../auth/enums/roles.enum';
 
 @Controller('products')
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) { }
 
     @Post()
+    @UseGuards(JwtGuard, RolesGuard)
+    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.CREATED)
     create(@Body() dto: CreateProductDto) {
         return this.productsService.create(dto);
@@ -23,12 +29,7 @@ export class ProductsController {
         @Query('inStock') inStock?: boolean,
     ) {
         return this.productsService.findAll({
-            page,
-            limit,
-            categoryId,
-            minPrice,
-            maxPrice,
-            inStock,
+            page, limit, categoryId, minPrice, maxPrice, inStock,
         });
     }
 
@@ -38,11 +39,15 @@ export class ProductsController {
     }
 
     @Patch(':id')
+    @UseGuards(JwtGuard, RolesGuard)
+    @Roles(Role.ADMIN)
     update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
         return this.productsService.update(id, dto);
     }
 
     @Delete(':id')
+    @UseGuards(JwtGuard, RolesGuard)
+    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.NO_CONTENT)
     remove(@Param('id') id: string) {
         return this.productsService.remove(id);

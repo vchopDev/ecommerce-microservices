@@ -17,3 +17,6 @@ build/
 
 # OS
 .DS_Store
+
+# Architecture
+ARCHITECTURE.md
