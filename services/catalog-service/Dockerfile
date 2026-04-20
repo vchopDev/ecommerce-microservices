@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY services/catalog-service/package.json ./services/catalog-service/
 
-RUN npm ci --workspace=services/catalog-service
+RUN npm ci --workspace=services/catalog-service --include-workspace-root
 
 COPY services/catalog-service/src ./services/catalog-service/src
 COPY services/catalog-service/tsconfig*.json ./services/catalog-service/
