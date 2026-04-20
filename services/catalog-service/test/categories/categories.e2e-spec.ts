@@ -53,7 +53,7 @@ describe('Categories (e2e)', () => {
                 .expect(201);
 
             expect(response.body.name).toBe('Electronics');
-            expect(response.body._id).toBeDefined();
+            expect(response.body.id).toBeDefined();
         });
 
         it('should return 409 if name already exists', async () => {
@@ -96,7 +96,7 @@ describe('Categories (e2e)', () => {
                 .send({ name: 'Electronics' });
 
             const response = await request(app.getHttpServer())
-                .get(`/categories/${created.body._id}`)
+                .get(`/categories/${created.body.id}`)
                 .expect(200);
 
             expect(response.body.name).toBe('Electronics');
@@ -125,7 +125,7 @@ describe('Categories (e2e)', () => {
                 .send({ name: 'Electronics' });
 
             const response = await request(app.getHttpServer())
-                .patch(`/categories/${created.body._id}`)
+                .patch(`/categories/${created.body.id}`)
                 .set('Authorization', `Bearer ${adminToken}`)
                 .send({ description: 'Updated description' })
                 .expect(200);
@@ -149,7 +149,7 @@ describe('Categories (e2e)', () => {
                 .send({ name: 'Electronics' });
 
             await request(app.getHttpServer())
-                .delete(`/categories/${created.body._id}`)
+                .delete(`/categories/${created.body.id}`)
                 .set('Authorization', `Bearer ${adminToken}`)
                 .expect(204);
         });

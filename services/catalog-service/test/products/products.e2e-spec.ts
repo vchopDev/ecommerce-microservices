@@ -32,7 +32,7 @@ describe('Products (e2e)', () => {
             .set('Authorization', `Bearer ${adminToken}`)
             .send({ name: 'Electronics', description: 'Electronic devices' });
 
-        categoryId = category.body._id;
+        categoryId = category.body.id;
     });
 
     afterAll(async () => {
@@ -71,7 +71,7 @@ describe('Products (e2e)', () => {
                 .expect(201);
 
             expect(response.body.name).toBe('MacBook Pro');
-            expect(response.body._id).toBeDefined();
+            expect(response.body.id).toBeDefined();
         });
 
         it('should return 400 if primaryCategoryId does not exist', async () => {
@@ -170,7 +170,7 @@ describe('Products (e2e)', () => {
                 });
 
             const response = await request(app.getHttpServer())
-                .get(`/products/${created.body._id}`)
+                .get(`/products/${created.body.id}`)
                 .expect(200);
 
             expect(response.body.name).toBe('MacBook Pro');
@@ -204,7 +204,7 @@ describe('Products (e2e)', () => {
                 });
 
             const response = await request(app.getHttpServer())
-                .patch(`/products/${created.body._id}`)
+                .patch(`/products/${created.body.id}`)
                 .set('Authorization', `Bearer ${adminToken}`)
                 .send({ price: 1999.99 })
                 .expect(200);
@@ -233,7 +233,7 @@ describe('Products (e2e)', () => {
                 });
 
             await request(app.getHttpServer())
-                .delete(`/products/${created.body._id}`)
+                .delete(`/products/${created.body.id}`)
                 .set('Authorization', `Bearer ${adminToken}`)
                 .expect(204);
         });
