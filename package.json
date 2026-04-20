@@ -1,16 +1,22 @@
 {
-    "name": "ecommerce-microservices",
-    "private": true,
-    "workspaces": [
-        "services/*",
-        "packages/*"
-    ],
-    "scripts": {
-        "start:all": "concurrently --names \"USER,CATALOG\" --prefix-colors \"blue,green\" \"npm run start:dev --workspace=@app/user-service\" \"npm run start:dev --workspace=@app/catalog-service\"",
-        "build:all": "npm run build --workspaces",
-        "lint:all": "npm run lint --workspaces"
-    },
-    "devDependencies": {
-        "concurrently": "^9.2.1"
-    }
+  "name": "ecommerce-microservices",
+  "private": true,
+  "workspaces": [
+    "services/*",
+    "packages/*",
+    "apps/*",
+  ],
+  "scripts": {
+    "start:all": "concurrently --names \"USER,CATALOG\" --prefix-colors \"blue,green\" \"npm run start:dev --workspace=@app/user-service\" \"npm run start:dev --workspace=@app/catalog-service\"",
+    "build:all": "npx nx run-many --target=build --all",
+    "test:all": "npx nx run-many --target=test --all",
+    "lint:all": "npx nx run-many --target=lint --all",
+    "affected:build": "npx nx affected --target=build",
+    "affected:test": "npx nx affected --target=test",
+    "affected:lint": "npx nx affected --target=lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "nx": "22.6.5"
+  }
 }

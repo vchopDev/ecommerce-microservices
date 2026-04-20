@@ -73,6 +73,41 @@ cd services/user-service
 npm run start:dev
 ```
 
+### Build
+
+```bash
+# build all projects
+npm run build:all
+
+# build a specific project
+npx nx run @app/user-service:build
+```
+
+### Test
+
+```bash
+# run all unit tests
+npm run test:all
+
+# run tests for a specific project
+npx nx run @app/user-service:test
+
+# run only affected tests (based on git changes)
+npm run affected:test
+```
+
+### Docker
+
+Local development only. Production uses a managed cloud database.
+
+```bash
+# start dev databases
+docker compose up -d
+
+# start test databases
+docker compose -f docker-compose.test.yml up -d
+```
+
 **2. The services table links to services that don't exist yet** — `api-gateway`, `cart-service`, `order-service`, `payment-service`, `notification-service` will all be dead links on GitHub. Either remove them until they exist, or add a note:
 
 ```markdown
@@ -83,8 +118,8 @@ Each service has its own README with setup instructions, environment variables, 
 | Service | Status | Path |
 |---|---|---|
 | User service | ✅ Done | [`services/user-service`](./services/user-service) |
-| Catalog service | 🚧 In progress | [`services/catalog-service`](./services/catalog-service) |
-| Cart service | 📋 Planned | — |
+| Catalog service | ✅ Done | [`services/catalog-service`](./services/catalog-service) |
+| Cart service | 🚧 In progress | [`services/cart-service`](./services/cart-service)  |
 | Order service | 📋 Planned | — |
 | Payment service | 📋 Planned | — |
 | Notification service | 📋 Planned | — |
