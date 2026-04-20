@@ -16,6 +16,7 @@ const mockUser = {
   email: 'victor@test.com',
   password: 'hashedpassword',
   name: 'Victor',
+  role: 'USER',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -101,6 +102,7 @@ describe('AuthService', () => {
       expect(mockJwtService.sign).toHaveBeenCalledWith({
         sub: 'uuid-123',
         email: 'victor@test.com',
+        role: 'USER',
       });
     });
   });
@@ -152,6 +154,7 @@ describe('AuthService', () => {
       expect(mockJwtService.sign).toHaveBeenCalledWith({
         sub: 'uuid-123',
         email: 'victor@test.com',
+        role: 'USER',
       });
     });
 

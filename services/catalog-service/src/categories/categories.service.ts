@@ -48,7 +48,7 @@ export class CategoriesService {
         }
 
         const category = await this.categoryModel
-            .findByIdAndUpdate(id, dto, { new: true })
+            .findByIdAndUpdate(id, dto, { returnDocument: 'after' })
             .populate('parentId')
             .exec();
 

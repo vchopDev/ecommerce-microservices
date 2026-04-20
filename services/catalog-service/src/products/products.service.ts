@@ -105,7 +105,7 @@ export class ProductsService {
         }
 
         const product = await this.productModel
-            .findByIdAndUpdate(id, dto, { new: true })
+            .findByIdAndUpdate(id, dto, { returnDocument: 'after' })
             .populate('primaryCategoryId')
             .exec();
 
