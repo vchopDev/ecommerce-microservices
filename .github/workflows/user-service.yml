@@ -4,15 +4,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'services/user-service/**'
-      - '.github/workflows/user-service.yml'
   pull_request:
     branches:
       - main
-    paths:
-      - 'services/user-service/**'
-      - '.github/workflows/user-service.yml'
 
 jobs:
   test:
@@ -36,6 +30,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -45,8 +41,7 @@ jobs:
           cache-dependency-path: 'package-lock.json'
 
       - name: Install dependencies
-        working-directory: services/user-service
-        run: npm ci --prefix ../..
+        run: npm ci
 
       - name: Generate Prisma client
         working-directory: services/user-service

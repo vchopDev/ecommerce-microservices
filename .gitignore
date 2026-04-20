@@ -20,3 +20,7 @@ build/
 
 # Architecture
 ARCHITECTURE.md
+
+
+.nx/cache
+.nx/workspace-data

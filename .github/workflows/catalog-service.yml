@@ -4,15 +4,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'services/catalog-service/**'
-      - '.github/workflows/catalog-service.yml'
   pull_request:
     branches:
       - main
-    paths:
-      - 'services/catalog-service/**'
-      - '.github/workflows/catalog-service.yml'
 
 jobs:
   test:
@@ -27,6 +21,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,8 +32,7 @@ jobs:
           cache-dependency-path: 'package-lock.json'
 
       - name: Install dependencies
-        working-directory: services/catalog-service
-        run: npm ci --prefix ../..
+        run: npm ci
 
       - name: Run unit tests
         working-directory: services/catalog-service
