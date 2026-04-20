@@ -35,7 +35,7 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        run: npx nx affected --target=test --projects=@app/catalog-service
+        run: npx nx affected --target=test --projects=@app/catalog-service --base=origin/main --head=HEAD
 
       - name: Run E2E tests
         working-directory: services/catalog-service
