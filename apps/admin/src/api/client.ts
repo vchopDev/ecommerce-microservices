@@ -1,21 +1,22 @@
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
-
 // Note: localStorage is used for simplicity.
-//TODO: In production consider httpOnly cookies for better XSS protection.
+// TODO: In production consider httpOnly cookies for better XSS protection.
 function getToken(): string | null {
     return localStorage.getItem('access_token')
 }
 
 async function request<T>(
+    baseUrl: string,
     path: string,
     options: RequestInit = {}
 ): Promise<T> {
     const token = getToken()
 
-    const response = await fetch(`${BASE_URL}${path}`, {
+    const hasBody = options.body !== undefined
+
+    const response = await fetch(`${baseUrl}${path}`, {
         ...options,
         headers: {
-            'Content-Type': 'application/json',
+            ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
             ...options.headers,
         },
@@ -33,12 +34,20 @@ async function request<T>(
     return response.json()
 }
 
-export const api = {
-    get: <T>(path: string) => request<T>(path),
-    post: <T>(path: string, body: unknown) =>
-        request<T>(path, { method: 'POST', body: JSON.stringify(body) }),
-    patch: <T>(path: string, body: unknown) =>
-        request<T>(path, { method: 'PATCH', body: JSON.stringify(body) }),
-    delete: <T>(path: string) =>
-        request<T>(path, { method: 'DELETE' }),
+const USER_API = import.meta.env.VITE_API_URL
+const CATALOG_API = import.meta.env.VITE_CATALOG_URL
+
+function createClient(baseUrl: string) {
+    return {
+        get: <T>(path: string) => request<T>(baseUrl, path),
+        post: <T>(path: string, body: unknown) =>
+            request<T>(baseUrl, path, { method: 'POST', body: JSON.stringify(body) }),
+        patch: <T>(path: string, body: unknown) =>
+            request<T>(baseUrl, path, { method: 'PATCH', body: JSON.stringify(body) }),
+        delete: <T>(path: string) =>
+            request<T>(baseUrl, path, { method: 'DELETE' }),
+    }
 }
+
+export const userApi = createClient(USER_API)
+export const catalogApi = createClient(CATALOG_API)

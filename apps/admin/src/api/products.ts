@@ -1,4 +1,4 @@
-import { api } from './client'
+import { catalogApi } from './client'
 import type { Category } from './categories'
 
 export interface Product {
@@ -63,18 +63,18 @@ export const productsApi = {
         if (query?.maxPrice !== undefined) params.append('maxPrice', String(query.maxPrice))
         if (query?.inStock) params.append('inStock', String(query.inStock))
         const qs = params.toString()
-        return api.get<ProductsResponse>(`/products${qs ? `?${qs}` : ''}`)
+        return catalogApi.get<ProductsResponse>(`/products${qs ? `?${qs}` : ''}`)
     },
 
     findById: (id: string) =>
-        api.get<Product>(`/products/${id}`),
+        catalogApi.get<Product>(`/products/${id}`),
 
     create: (dto: CreateProductDto) =>
-        api.post<Product>('/products', dto),
+        catalogApi.post<Product>('/products', dto),
 
     update: (id: string, dto: UpdateProductDto) =>
-        api.patch<Product>(`/products/${id}`, dto),
+        catalogApi.patch<Product>(`/products/${id}`, dto),
 
     remove: (id: string) =>
-        api.delete<void>(`/products/${id}`),
+        catalogApi.delete<void>(`/products/${id}`),
 }

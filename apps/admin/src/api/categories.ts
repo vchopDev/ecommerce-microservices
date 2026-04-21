@@ -1,4 +1,4 @@
-import { api } from './client'
+import { catalogApi } from './client'
 
 export interface Category {
     id: string
@@ -23,17 +23,17 @@ export interface UpdateCategoryDto {
 
 export const categoriesApi = {
     findAll: () =>
-        api.get<Category[]>('/categories'),
+        catalogApi.get<Category[]>('/categories'),
 
     findById: (id: string) =>
-        api.get<Category>(`/categories/${id}`),
+        catalogApi.get<Category>(`/categories/${id}`),
 
     create: (dto: CreateCategoryDto) =>
-        api.post<Category>('/categories', dto),
+        catalogApi.post<Category>('/categories', dto),
 
     update: (id: string, dto: UpdateCategoryDto) =>
-        api.patch<Category>(`/categories/${id}`, dto),
+        catalogApi.patch<Category>(`/categories/${id}`, dto),
 
     remove: (id: string) =>
-        api.delete<void>(`/categories/${id}`),
+        catalogApi.delete<void>(`/categories/${id}`),
 }

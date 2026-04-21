@@ -1,4 +1,5 @@
-import { api } from './client'
+import { userApi } from './client'
+
 
 export interface LoginDto {
   email: string
@@ -16,5 +17,5 @@ export interface AuthResponse {
 
 export const authApi = {
   login: (dto: LoginDto) =>
-    api.post<AuthResponse>('/auth/login', dto),
+    userApi.post<AuthResponse>('/auth/login', dto),
 }
