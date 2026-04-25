@@ -143,7 +143,7 @@ export default function CategoriesPage() {
                         Manage product categories
                     </p>
                 </div>
-                <Button onClick={() => handleOpen()}>
+                <Button onClick={() => handleOpen()} data-testid="add-category-button">
                     <Plus className="h-4 w-4 mr-2" />
                     Add category
                 </Button>
@@ -153,7 +153,7 @@ export default function CategoriesPage() {
                 <p className="text-gray-500">Loading...</p>
             ) : (
                 <div className="bg-white rounded-lg border">
-                    <Table>
+                    <Table data-testid="categories-table">
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
@@ -174,6 +174,7 @@ export default function CategoriesPage() {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => handleOpen(category)}
+                                                data-testid="edit-category-button"
                                             >
                                                 <Pencil className="h-4 w-4" />
                                             </Button>
@@ -182,6 +183,7 @@ export default function CategoriesPage() {
                                                 size="icon"
                                                 className="text-red-600 hover:text-red-700"
                                                 onClick={() => setDeletingCategory(category)}
+                                                data-testid="delete-category-button"
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
@@ -210,7 +212,12 @@ export default function CategoriesPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="name">Name</FieldLabel>
-                                        <Input {...field} id="name" placeholder="Electronics" />
+                                        <Input
+                                            {...field}
+                                            id="name"
+                                            placeholder="Electronics"
+                                            data-testid="category-name-input"
+                                        />
                                         <FieldError errors={[fieldState.error]} />
                                     </Field>
                                 )}
@@ -221,7 +228,12 @@ export default function CategoriesPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="description">Description</FieldLabel>
-                                        <Input {...field} id="description" placeholder="Optional description" />
+                                        <Input
+                                            {...field}
+                                            id="description"
+                                            placeholder="Optional description"
+                                            data-testid="category-description-input"
+                                        />
                                         <FieldError errors={[fieldState.error]} />
                                     </Field>
                                 )}
@@ -236,7 +248,7 @@ export default function CategoriesPage() {
                                             onValueChange={field.onChange}
                                             value={field.value ?? ''}
                                         >
-                                            <SelectTrigger id="parentId">
+                                            <SelectTrigger id="parentId" data-testid="category-parent-select">
                                                 <SelectValue placeholder="None (top level)" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -257,7 +269,11 @@ export default function CategoriesPage() {
                             <Button type="button" variant="outline" onClick={handleClose}>
                                 Cancel
                             </Button>
-                            <Button type="submit" disabled={isSubmitting}>
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                data-testid="category-submit-button"
+                            >
                                 {editingCategory ? 'Save changes' : 'Create'}
                             </Button>
                         </DialogFooter>
@@ -283,6 +299,7 @@ export default function CategoriesPage() {
                         <AlertDialogAction
                             className="bg-red-600 hover:bg-red-700"
                             onClick={() => deletingCategory && deleteMutation.mutate(deletingCategory.id)}
+                            data-testid="confirm-delete-button"
                         >
                             Delete
                         </AlertDialogAction>

@@ -59,6 +59,7 @@ export default function LoginPage() {
                                             type="email"
                                             placeholder="admin@example.com"
                                             aria-invalid={fieldState.invalid}
+                                            data-testid="email-input"
                                         />
                                         <FieldError errors={[fieldState.error]} />
                                     </Field>
@@ -76,15 +77,23 @@ export default function LoginPage() {
                                             type="password"
                                             placeholder="••••••••"
                                             aria-invalid={fieldState.invalid}
+                                            data-testid="password-input"
                                         />
                                         <FieldError errors={[fieldState.error]} />
                                     </Field>
                                 )}
                             />
                             {errors.root && (
-                                <p className="text-sm text-red-500">{errors.root.message}</p>
+                                <p className="text-sm text-red-500" data-testid="login-error">
+                                    {errors.root.message}
+                                </p>
                             )}
-                            <Button type="submit" className="w-full" disabled={isSubmitting}>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={isSubmitting}
+                                data-testid="login-button"
+                            >
                                 {isSubmitting ? 'Signing in...' : 'Sign in'}
                             </Button>
                         </FieldGroup>

@@ -187,7 +187,7 @@ export default function ProductsPage() {
                         {data?.total ?? 0} products total
                     </p>
                 </div>
-                <Button onClick={() => handleOpen()}>
+                <Button onClick={() => handleOpen()} data-testid="add-product-button">
                     <Plus className="h-4 w-4 mr-2" />
                     Add product
                 </Button>
@@ -198,7 +198,7 @@ export default function ProductsPage() {
             ) : (
                 <>
                     <div className="bg-white rounded-lg border">
-                        <Table>
+                        <Table data-testid="products-table">
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
@@ -236,6 +236,7 @@ export default function ProductsPage() {
                                                         variant="ghost"
                                                         size="icon"
                                                         onClick={() => handleOpen(product)}
+                                                        data-testid="edit-product-button"
                                                     >
                                                         <Pencil className="h-4 w-4" />
                                                     </Button>
@@ -244,6 +245,7 @@ export default function ProductsPage() {
                                                         size="icon"
                                                         className="text-red-600 hover:text-red-700"
                                                         onClick={() => setDeletingProduct(product)}
+                                                        data-testid="delete-product-button"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
@@ -258,7 +260,7 @@ export default function ProductsPage() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center justify-between mt-4" data-testid="pagination">
                             <p className="text-sm text-gray-500">
                                 Page {page} of {totalPages}
                             </p>
@@ -268,6 +270,7 @@ export default function ProductsPage() {
                                     size="sm"
                                     onClick={() => setPage(p => p - 1)}
                                     disabled={page === 1}
+                                    data-testid="pagination-prev"
                                 >
                                     Previous
                                 </Button>
@@ -276,6 +279,7 @@ export default function ProductsPage() {
                                     size="sm"
                                     onClick={() => setPage(p => p + 1)}
                                     disabled={page === totalPages}
+                                    data-testid="pagination-next"
                                 >
                                     Next
                                 </Button>
@@ -301,7 +305,12 @@ export default function ProductsPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="name">Name</FieldLabel>
-                                        <Input {...field} id="name" placeholder="MacBook Pro" />
+                                        <Input
+                                            {...field}
+                                            id="name"
+                                            placeholder="MacBook Pro"
+                                            data-testid="product-name-input"
+                                        />
                                         <FieldError errors={[fieldState.error]} />
                                     </Field>
                                 )}
@@ -312,7 +321,12 @@ export default function ProductsPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="description">Description</FieldLabel>
-                                        <Input {...field} id="description" placeholder="Optional description" />
+                                        <Input
+                                            {...field}
+                                            id="description"
+                                            placeholder="Optional description"
+                                            data-testid="product-description-input"
+                                        />
                                         <FieldError errors={[fieldState.error]} />
                                     </Field>
                                 )}
@@ -331,6 +345,7 @@ export default function ProductsPage() {
                                                 step="0.01"
                                                 min="0"
                                                 onChange={e => field.onChange(parseFloat(e.target.value))}
+                                                data-testid="product-price-input"
                                             />
                                             <FieldError errors={[fieldState.error]} />
                                         </Field>
@@ -348,6 +363,7 @@ export default function ProductsPage() {
                                                 type="number"
                                                 min="0"
                                                 onChange={e => field.onChange(parseInt(e.target.value))}
+                                                data-testid="product-stock-input"
                                             />
                                             <FieldError errors={[fieldState.error]} />
                                         </Field>
@@ -361,7 +377,7 @@ export default function ProductsPage() {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>Primary category</FieldLabel>
                                         <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger>
+                                            <SelectTrigger data-testid="product-primary-category-select">
                                                 <SelectValue placeholder="Select a category" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -385,7 +401,7 @@ export default function ProductsPage() {
                                         <MultiSelect
                                             options={
                                                 categories
-                                                    ?.filter(c => c.id !== field.value?.includes(c.id))
+                                                    ?.filter(c => !field.value?.includes(c.id))
                                                     .map(c => ({ value: c.id, label: c.name })) ?? []
                                             }
                                             value={field.value ?? []}
@@ -400,7 +416,11 @@ export default function ProductsPage() {
                             <Button type="button" variant="outline" onClick={handleClose}>
                                 Cancel
                             </Button>
-                            <Button type="submit" disabled={isSubmitting}>
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                data-testid="product-submit-button"
+                            >
                                 {editingProduct ? 'Save changes' : 'Create'}
                             </Button>
                         </DialogFooter>
@@ -426,6 +446,7 @@ export default function ProductsPage() {
                         <AlertDialogAction
                             className="bg-red-600 hover:bg-red-700"
                             onClick={() => deletingProduct && deleteMutation.mutate(deletingProduct.id)}
+                            data-testid="confirm-delete-button"
                         >
                             Delete
                         </AlertDialogAction>
