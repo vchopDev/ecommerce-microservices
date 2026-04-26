@@ -9,6 +9,13 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  app.enableCors({
+    origin: process.env.ALLOWED_ORIGINS?.split(','),
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,

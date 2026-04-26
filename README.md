@@ -1,6 +1,6 @@
 # Scalable E-Commerce Platform
 
-A scalable e-commerce backend built with a microservices architecture using NestJS, TypeScript, and Docker.
+A scalable e-commerce backend built with a microservices architecture using NestJS, TypeScript, and Docker. Includes a React admin dashboard for product and category management.
 
 > Part of the [Backend Developer Projects](https://roadmap.sh/projects/scalable-ecommerce-platform) path on roadmap.sh — built as a learning project and portfolio piece.
 
@@ -9,7 +9,7 @@ A scalable e-commerce backend built with a microservices architecture using Nest
 Multiple independent services communicate through an API Gateway (synchronous REST) and RabbitMQ (async events).
 
 ```
-Clients (web / mobile)
+Clients (web / mobile / admin)
         │
    API Gateway
         │
@@ -23,12 +23,18 @@ Users   Catalog    Cart     Orders       Payments
 
 ## Tech stack
 
+### Backend
 - **Framework**: NestJS with Fastify adapter
 - **Language**: TypeScript
 - **Message bus**: RabbitMQ
 - **Databases**: PostgreSQL · MongoDB · Redis
 - **Containerisation**: Docker + Docker Compose
 - **CI/CD**: GitHub Actions
+- **Monorepo**: Nx
+
+### Frontend
+- **Admin dashboard**: React + Vite + Tailwind CSS + shadcn/ui
+- **Storefront**: Next.js (planned)
 
 ## Getting started
 
@@ -40,28 +46,45 @@ Users   Catalog    Cart     Orders       Payments
 
 ## Environment setup
 
-Each service has a `.env.example` file. Copy it to `.env` and fill in your values:
+Each service and app has a `.env.example` file. Copy it to `.env` and fill in your values:
 
 ```bash
 cp services/user-service/.env.example services/user-service/.env
 cp services/catalog-service/.env.example services/catalog-service/.env
+cp apps/admin/.env.example apps/admin/.env
 ```
 
-### Run a service in development
+## Docker
+
+Local development only. Production uses managed cloud databases.
+
+```bash
+# start dev databases
+docker compose up -d
+
+# start test databases
+docker compose -f docker-compose.test.yml up -d
+```
+
+## Running the project
 
 ```bash
 # install all dependencies from root
 npm install
 
-# start all services together
+# start all backend services together
 npm run start:all
 
-# or start a single service
+# start the admin dashboard
+cd apps/admin
+npm run dev
+
+# or start a single backend service
 cd services/user-service
 npm run start:dev
 ```
 
-### Build
+## Build
 
 ```bash
 # build all projects
@@ -71,7 +94,7 @@ npm run build:all
 npx nx run @app/user-service:build
 ```
 
-### Test
+## Test
 
 ```bash
 # run all unit tests
@@ -84,21 +107,6 @@ npx nx run @app/user-service:test
 npm run affected:test
 ```
 
-### Docker
-
-Local development only. Production uses a managed cloud database.
-
-```bash
-# start dev databases
-docker compose up -d
-
-# start test databases
-docker compose -f docker-compose.test.yml up -d
-```
-
-**2. The services table links to services that don't exist yet** — `api-gateway`, `cart-service`, `order-service`, `payment-service`, `notification-service` will all be dead links on GitHub. Either remove them until they exist, or add a note:
-
-```markdown
 ## Services
 
 Each service has its own README with setup instructions, environment variables, and API docs.
@@ -107,12 +115,18 @@ Each service has its own README with setup instructions, environment variables, 
 |---|---|---|
 | User service | ✅ Done | [`services/user-service`](./services/user-service) |
 | Catalog service | ✅ Done | [`services/catalog-service`](./services/catalog-service) |
-| Cart service | 🚧 In progress | [`services/cart-service`](./services/cart-service)  |
+| Cart service | 📋 Planned | — |
 | Order service | 📋 Planned | — |
 | Payment service | 📋 Planned | — |
 | Notification service | 📋 Planned | — |
 | API Gateway | 📋 Planned | — |
-```
+
+## Apps
+
+| App | Status | Path |
+|---|---|---|
+| Admin dashboard | 🚧 In progress | [`apps/admin`](./apps/admin) |
+| Storefront | 📋 Planned | — |
 
 ## Progress
 

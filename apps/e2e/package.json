@@ -1,0 +1,13 @@
+{
+  "name": "@app/e2e",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "cy:open": "cypress open --browser chrome",
+    "cy:run": "cypress run --browser chrome --headless"
+  },
+  "devDependencies": {
+    "cypress": "^14.2.0",
+    "typescript": "^5.4.0"
+  }
+}
