@@ -127,10 +127,14 @@ export default function CategoriesPage() {
     }
 
     const onSubmit = async (values: CategoryFormValues) => {
+        const dto = {
+            ...values,
+            parentId: values.parentId || undefined,
+        }
         if (editingCategory) {
-            updateMutation.mutate({ id: editingCategory.id, dto: values })
+            updateMutation.mutate({ id: editingCategory.id, dto })
         } else {
-            createMutation.mutate(values)
+            createMutation.mutate(dto)
         }
     }
 

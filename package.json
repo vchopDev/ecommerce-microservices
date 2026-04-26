@@ -13,7 +13,9 @@
     "lint:all": "npx nx run-many --target=lint --all",
     "affected:build": "npx nx affected --target=build",
     "affected:test": "npx nx affected --target=test",
-    "affected:lint": "npx nx affected --target=lint"
+    "affected:lint": "npx nx affected --target=lint",
+    "e2e:open": "npm run cy:open --workspace=@app/e2e",
+    "e2e:run": "npm run cy:run --workspace=@app/e2e"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
