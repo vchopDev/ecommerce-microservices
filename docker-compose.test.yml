@@ -17,6 +17,11 @@ services:
     volumes:
       - mongo_test_data:/data/db
 
+  redis_test:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+
 volumes:
   postgres_test_data:
   mongo_test_data:

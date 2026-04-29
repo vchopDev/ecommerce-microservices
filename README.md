@@ -51,6 +51,7 @@ Each service and app has a `.env.example` file. Copy it to `.env` and fill in yo
 ```bash
 cp services/user-service/.env.example services/user-service/.env
 cp services/catalog-service/.env.example services/catalog-service/.env
+cp services/cart-service/.env.example services/cart-service/.env
 cp apps/admin/.env.example apps/admin/.env
 ```
 
@@ -115,7 +116,7 @@ Each service has its own README with setup instructions, environment variables, 
 |---|---|---|
 | User service | ✅ Done | [`services/user-service`](./services/user-service) |
 | Catalog service | ✅ Done | [`services/catalog-service`](./services/catalog-service) |
-| Cart service | 📋 Planned | — |
+| Cart service | ✅ Done | [`services/cart-service`](./services/cart-service) |
 | Order service | 📋 Planned | — |
 | Payment service | 📋 Planned | — |
 | Notification service | 📋 Planned | — |
@@ -130,7 +131,7 @@ Each service has its own README with setup instructions, environment variables, 
 
 ## Progress
 
-Track development progress on the [GitHub Project board](../../projects).
+Track development progress on the [GitHub Project board](https://github.com/users/vchopDev/projects/1).
 
 ## License
 
