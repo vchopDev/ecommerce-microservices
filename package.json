@@ -7,7 +7,7 @@
     "apps/*"
   ],
   "scripts": {
-    "start:all": "concurrently --names \"USER,CATALOG,CART,ADMIN\" --prefix-colors \"blue,green,yellow,magenta\" \"npm run start:dev --workspace=@app/user-service\" \"npm run start:dev --workspace=@app/catalog-service\" \"npm run start:dev --workspace=@app/cart-service\" \"npm run dev --workspace=@app/admin\"",
+    "start:all": "concurrently --names \"USER,CATALOG,CART,ORDER,ADMIN\" --prefix-colors \"blue,green,yellow,red,magenta\" \"npm run start:dev --workspace=@app/user-service\" \"npm run start:dev --workspace=@app/catalog-service\" \"npm run start:dev --workspace=@app/cart-service\" \"npm run start:dev --workspace=@app/order-service\" \"npm run dev --workspace=@app/admin\"",
     "build:all": "npx nx run-many --target=build --all",
     "test:all": "npx nx run-many --target=test --all",
     "lint:all": "npx nx run-many --target=lint --all",
