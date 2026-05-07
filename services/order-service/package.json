@@ -17,8 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "dotenv -e .env.test -- jest --config ./test/jest-e2e.json --runInBand --forceExit",
-    "test:unit": "jest --testPathPatterns=spec",
+    "test:e2e": "npx prisma generate && dotenv -e .env.test -- jest --config ./test/jest-e2e.json --runInBand --forceExit",
+    "test:unit": "npx prisma generate && jest --testPathPatterns=spec",
     "migrate:test": "dotenv -e .env.test -- prisma migrate deploy"
   },
   "dependencies": {

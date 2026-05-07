@@ -15,7 +15,9 @@
     "affected:test": "npx nx affected --target=test",
     "affected:lint": "npx nx affected --target=lint",
     "e2e:open": "npm run cy:open --workspace=@app/e2e",
-    "e2e:run": "npm run cy:run --workspace=@app/e2e"
+    "e2e:run": "npm run cy:run --workspace=@app/e2e",
+    "test:e2e:all": "npm run test:e2e --workspace=@app/user-service && npm run test:e2e --workspace=@app/catalog-service && npm run test:e2e --workspace=@app/cart-service && npm run test:e2e --workspace=@app/order-service",
+    "test:unit:all": "npm run test:unit --workspace=@app/user-service && npm run test:unit --workspace=@app/catalog-service && npm run test:unit --workspace=@app/cart-service && npm run test:unit --workspace=@app/order-service"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
