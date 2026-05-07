@@ -6,7 +6,7 @@ COPY package*.json ./
 COPY services/order-service/package.json ./services/order-service/
 COPY services/order-service/prisma ./services/order-service/prisma/
 
-RUN npm ci --workspace=services/order-service
+RUN npm ci --workspace=services/order-service --include=dev
 
 COPY services/order-service/src ./services/order-service/src
 COPY services/order-service/tsconfig*.json ./services/order-service/
