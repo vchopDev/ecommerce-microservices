@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
-import { AuthModule } from 'src/auth/auth.module';
-import { PrismaModule } from 'src/prisma/prisma.module';
-import { CART_CLIENT } from 'src/cart/cart-client.interface';
-import { HttpCartClient } from 'src/cart/cart-client';
-import { CATALOG_CLIENT } from 'src/catalog/catalog-client.interface';
-import { HttpCatalogClient } from 'src/catalog/catalog-client';
-import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
+import { AuthModule } from '../auth/auth.module';
+import { PrismaModule } from '../prisma/prisma.module';
+import { CART_CLIENT } from '../cart/cart-client.interface';
+import { HttpCartClient } from '../cart/cart-client';
+import { CATALOG_CLIENT } from '../catalog/catalog-client.interface';
+import { HttpCatalogClient } from '../catalog/catalog-client';
+import { RabbitMQModule } from '../rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [

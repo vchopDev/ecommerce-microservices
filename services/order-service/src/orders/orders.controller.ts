@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Patch, Param, Req, UseGuards } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { JwtGuard } from '../auth/guards/jwt.guard';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
