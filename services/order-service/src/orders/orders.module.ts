@@ -7,11 +7,13 @@ import { CART_CLIENT } from 'src/cart/cart-client.interface';
 import { HttpCartClient } from 'src/cart/cart-client';
 import { CATALOG_CLIENT } from 'src/catalog/catalog-client.interface';
 import { HttpCatalogClient } from 'src/catalog/catalog-client';
+import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
     AuthModule,
-    PrismaModule
+    PrismaModule,
+    RabbitMQModule
   ],
   controllers: [OrdersController],
   providers: [OrdersService,

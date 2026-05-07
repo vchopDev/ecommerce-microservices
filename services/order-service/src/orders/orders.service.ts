@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { OrderStatus } from '../generated/prisma';
 import { CART_CLIENT, type CartClient, type CartItem } from 'src/cart/cart-client.interface';
 import { CATALOG_CLIENT, type CatalogClient } from 'src/catalog/catalog-client.interface';
+import { RabbitMQService } from 'src/rabbitmq/rabbitmq.service';
 
 @Injectable()
 export class OrdersService {
@@ -12,6 +13,7 @@ export class OrdersService {
         @Inject(CATALOG_CLIENT)
         private readonly catalogClient: CatalogClient,
         private readonly prisma: PrismaService,
+        private readonly rabbitMQService: RabbitMQService,
     ) { }
 
 
@@ -62,6 +64,21 @@ export class OrdersService {
         await this.cartClient.clearCart(userId);
 
         // TODO: publish order.placed to RabbitMQ
+        await this.rabbitMQService.publish(
+            'ecommerce',
+            'order.placed',
+            {
+                orderId: order.id,
+                userId: order.userId,
+                totalPrice: order.totalPrice,
+                items: order.items.map((item) => ({
+                    productId: item.productId,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                })),
+            }
+        );
 
         return order;
     }
