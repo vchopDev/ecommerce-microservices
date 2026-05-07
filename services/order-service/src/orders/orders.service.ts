@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable, NotFoundException, BadRequestException, Inject, InternalServerErrorException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { OrderStatus } from '../generated/prisma';
-import { CART_CLIENT, type CartClient, type CartItem } from 'src/cart/cart-client.interface';
-import { CATALOG_CLIENT, type CatalogClient } from 'src/catalog/catalog-client.interface';
-import { RabbitMQService } from 'src/rabbitmq/rabbitmq.service';
+import { CART_CLIENT, type CartClient, type CartItem } from '../cart/cart-client.interface';
+import { CATALOG_CLIENT, type CatalogClient } from '../catalog/catalog-client.interface';
+import { RabbitMQService } from '../rabbitmq/rabbitmq.service';
 
 @Injectable()
 export class OrdersService {
@@ -20,7 +20,6 @@ export class OrdersService {
 
 
     async checkout(userId: string) {
-        // TODO: CartClient — fetch cart
         const cart = await this.cartClient.getCart(userId);
 
         if (!cart || cart.items.length === 0) {
@@ -63,12 +62,12 @@ export class OrdersService {
 
         await this.cartClient.clearCart(userId);
 
-        // TODO: publish order.placed to RabbitMQ
+
         await this.rabbitMQService.publish(
             'ecommerce',
             'order.placed',
             {
-                orderId: order.id,
+                id: order.id,
                 userId: order.userId,
                 totalPrice: order.totalPrice,
                 items: order.items.map((item) => ({
@@ -77,6 +76,8 @@ export class OrdersService {
                     price: item.price,
                     quantity: item.quantity,
                 })),
+                status: order.status,
+                createdAt: order.createdAt,
             }
         );
 
@@ -110,23 +111,36 @@ export class OrdersService {
     }
 
     async cancel(userId: string, orderId: string) {
-        const order = await this.prisma.order.findUnique({
-            where: { id: orderId, userId },
-        });
+        try {
+            const cancelledOrder = await this.prisma.order.update({
+                where: { id: orderId, userId, status: OrderStatus.PENDING },
+                data: {
+                    status: OrderStatus.CANCELLED
+                },
+                include: { items: true },
+            });
 
-        if (!order) {
-            throw new NotFoundException('Order not found');
-        }
-
-        if (order.status !== OrderStatus.PENDING) {
-            throw new BadRequestException('Order cannot be cancelled');
-        }
-
-        return this.prisma.order.update({
-            where: { id: orderId },
-            data: {
-                status: OrderStatus.CANCELLED
+            await this.rabbitMQService.publish(
+                'ecommerce',
+                'order.cancelled',
+                {
+                    orderId: cancelledOrder.id,
+                    userId: cancelledOrder.userId,
+                    totalPrice: cancelledOrder.totalPrice,
+                    items: cancelledOrder.items.map((item) => ({
+                        productId: item.productId,
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                    })),
+                }
+            );
+            return cancelledOrder;
+        } catch (error) {
+            if (error.code === 'P2025') {
+                throw new NotFoundException('Order not found or cannot be cancelled');
             }
-        });
+            throw new InternalServerErrorException('Failed to cancel order');
+        }
     }
 }
