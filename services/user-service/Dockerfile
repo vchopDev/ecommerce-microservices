@@ -6,7 +6,7 @@ COPY package*.json ./
 COPY services/user-service/package.json ./services/user-service/
 COPY services/user-service/prisma ./services/user-service/prisma/
 
-RUN npm ci --workspace=services/user-service
+RUN npm ci --workspace=services/user-service --include=dev
 
 COPY services/user-service/src ./services/user-service/src
 COPY services/user-service/tsconfig*.json ./services/user-service/

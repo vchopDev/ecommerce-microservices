@@ -1,0 +1,74 @@
+name: Order Service CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres_order_test:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: secret
+          POSTGRES_DB: order_service_test
+        ports:
+          - 5435:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        working-directory: services/order-service
+        run: npx prisma generate
+
+      - name: Run unit tests
+        working-directory: services/order-service
+        run: npm run test:unit
+
+      - name: Run migrations
+        working-directory: services/order-service
+        env:
+          DATABASE_URL: postgresql://app:secret@localhost:5435/order_service_test?schema=public
+        run: npx prisma migrate deploy
+
+      - name: Run E2E tests
+        working-directory: services/order-service
+        env:
+          DATABASE_URL: postgresql://app:secret@localhost:5435/order_service_test?schema=public
+          JWT_SECRET: test-secret
+          JWT_EXPIRES_IN: 7d
+          PORT: 3004
+          CART_URL: http://localhost:3003
+          CATALOG_URL: http://localhost:3002
+          RABBITMQ_URL: amqp://localhost:5672
+          ALLOWED_ORIGINS: http://localhost:5173
+        run: npm run test:e2e
+
+      - name: Build Docker image
+        run: docker build -f services/order-service/Dockerfile -t order-service:${{ github.sha }} .
