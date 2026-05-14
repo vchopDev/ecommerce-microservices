@@ -6,7 +6,7 @@ import { Product, ProductSchema } from './schemas/product.schema';
 import { CategoriesModule } from '../categories/categories.module';
 import { AuthModule } from '../auth/auth.module';
 import { RabbitMQModule } from '../rabbitmq/rabbitmq.module';
-import { RabbitMQConsumer } from 'src/rabbitmq/rabbitmq.consumer';
+import { RabbitMQConsumer } from '../rabbitmq/rabbitmq.consumer';
 
 @Module({
   imports: [
