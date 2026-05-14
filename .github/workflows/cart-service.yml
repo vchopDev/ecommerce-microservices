@@ -17,6 +17,10 @@ jobs:
         image: redis:7-alpine
         ports:
           - 6380:6379
+      rabbitmq_test:
+        image: rabbitmq:3-alpine
+        ports:
+          - 5673:5672
 
     steps:
       - name: Checkout code
@@ -47,6 +51,7 @@ jobs:
           CATALOG_URL: http://localhost:3002
           ALLOWED_ORIGINS: http://localhost:5173
           CART_TTL_SECONDS: 2592000
+          RABBITMQ_URL: amqp://localhost:5673
         run: npm run test:e2e
 
       - name: Build Docker image

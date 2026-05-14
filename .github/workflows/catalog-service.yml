@@ -17,6 +17,10 @@ jobs:
         image: mongo:7
         ports:
           - 27018:27017
+      rabbitmq_test:
+        image: rabbitmq:3-alpine
+        ports:
+          - 5673:5672
 
     steps:
       - name: Checkout code
@@ -44,6 +48,7 @@ jobs:
           MONGODB_URI: mongodb://localhost:27018/catalog_service_test
           JWT_SECRET: test-secret
           PORT: 3002
+          RABBITMQ_URL: amqp://localhost:5673
         run: npm run test:e2e
 
       - name: Build Docker image
