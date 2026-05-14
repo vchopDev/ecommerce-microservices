@@ -4,6 +4,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Product } from './schemas/product.schema';
 import { CategoriesService } from '../categories/categories.service';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { RabbitMQService } from '../rabbitmq/rabbitmq.service';
 
 const mockProduct = {
   _id: '507f1f77bcf86cd799439011',
@@ -22,6 +23,7 @@ const mockProduct = {
 const mockProductModel = {
   find: jest.fn(),
   findById: jest.fn(),
+  select: jest.fn(),
   findByIdAndUpdate: jest.fn(),
   findByIdAndDelete: jest.fn(),
   countDocuments: jest.fn(),
@@ -29,6 +31,13 @@ const mockProductModel = {
 
 const mockCategoriesService = {
   exists: jest.fn(),
+};
+
+const mockRabbitMQService = {
+  publish: jest.fn(),
+  consume: jest.fn(),
+  onModuleInit: jest.fn(),
+  onModuleDestroy: jest.fn(),
 };
 
 describe('ProductsService', () => {
@@ -45,6 +54,10 @@ describe('ProductsService', () => {
         {
           provide: CategoriesService,
           useValue: mockCategoriesService,
+        },
+        {
+          provide: RabbitMQService,
+          useValue: mockRabbitMQService,
         },
       ],
     }).compile();
@@ -143,6 +156,13 @@ describe('ProductsService', () => {
   describe('update', () => {
     it('should update and return a product', async () => {
       mockCategoriesService.exists.mockResolvedValue(true);
+
+      mockProductModel.findById.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(mockProduct),
+        }),
+      });
+
       mockProductModel.findByIdAndUpdate.mockReturnValue({
         populate: jest.fn().mockReturnValue({
           exec: jest.fn().mockResolvedValue({ ...mockProduct, price: 1999.99 }),
@@ -154,8 +174,8 @@ describe('ProductsService', () => {
     });
 
     it('should throw NotFoundException if product not found', async () => {
-      mockProductModel.findByIdAndUpdate.mockReturnValue({
-        populate: jest.fn().mockReturnValue({
+      mockProductModel.findById.mockReturnValue({
+        select: jest.fn().mockReturnValue({
           exec: jest.fn().mockResolvedValue(null),
         }),
       });
@@ -163,6 +183,90 @@ describe('ProductsService', () => {
       await expect(
         service.update('507f1f77bcf86cd799439011', { price: 1999.99 }),
       ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should publish product.price.changed when price is changed', async () => {
+      mockCategoriesService.exists.mockResolvedValue(true);
+      mockProductModel.findById.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(mockProduct),
+        }),
+      });
+      mockProductModel.findByIdAndUpdate.mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue({ ...mockProduct, price: 1999.99 }),
+        }),
+      });
+
+      await service.update('507f1f77bcf86cd799439011', { price: 1999.99 });
+      expect(mockRabbitMQService.publish).toHaveBeenCalled();
+    });
+
+    it('should NOT publish product.price.changed when price is unchanged', async () => {
+      mockCategoriesService.exists.mockResolvedValue(true);
+      mockProductModel.findById.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(mockProduct),
+        }),
+      });
+      mockProductModel.findByIdAndUpdate.mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(mockProduct),
+        }),
+      });
+
+      await service.update('507f1f77bcf86cd799439011', { price: 2499.99 });
+      expect(mockRabbitMQService.publish).not.toHaveBeenCalled();
+    });
+
+    it('should NOT publish product.price.changed when dto.price is undefined', async () => {
+      mockCategoriesService.exists.mockResolvedValue(true);
+      mockProductModel.findById.mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(mockProduct),
+        }),
+      });
+      mockProductModel.findByIdAndUpdate.mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue(mockProduct),
+        }),
+      });
+
+      await service.update('507f1f77bcf86cd799439011', { name: 'Test' });
+      expect(mockRabbitMQService.publish).not.toHaveBeenCalled();
+    });
+  });
+
+
+  describe('decrementStock', () => {
+    it('should decrement stock and publish product.out.of.stock if stock is 0', async () => {
+      mockProductModel.findByIdAndUpdate.mockReturnValue({
+        exec: jest.fn().mockResolvedValue({ ...mockProduct, stock: 0 }),
+      });
+
+      await service.decrementStock('507f1f77bcf86cd799439011', 1);
+      expect(mockRabbitMQService.publish).toHaveBeenCalled();
+    });
+
+    it('should NOT publish product.out.of.stock if stock is not 0', async () => {
+      mockProductModel.findByIdAndUpdate.mockReturnValue({
+        exec: jest.fn().mockResolvedValue({ ...mockProduct, stock: 1 }),
+      });
+
+      await service.decrementStock('507f1f77bcf86cd799439011', 1);
+      expect(mockRabbitMQService.publish).not.toHaveBeenCalled();
+    });
+
+    it('should log and return when product not found', async () => {
+      mockProductModel.findByIdAndUpdate.mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      });
+
+      await expect(
+        service.decrementStock('507f1f77bcf86cd799439011', 5),
+      ).resolves.toBeUndefined();
+
+      expect(mockRabbitMQService.publish).not.toHaveBeenCalled();
     });
   });
 

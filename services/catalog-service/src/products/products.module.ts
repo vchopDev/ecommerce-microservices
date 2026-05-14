@@ -5,6 +5,8 @@ import { ProductsService } from './products.service';
 import { Product, ProductSchema } from './schemas/product.schema';
 import { CategoriesModule } from '../categories/categories.module';
 import { AuthModule } from '../auth/auth.module';
+import { RabbitMQModule } from '../rabbitmq/rabbitmq.module';
+import { RabbitMQConsumer } from 'src/rabbitmq/rabbitmq.consumer';
 
 @Module({
   imports: [
@@ -13,8 +15,9 @@ import { AuthModule } from '../auth/auth.module';
     ]),
     CategoriesModule,
     AuthModule,
+    RabbitMQModule,
   ],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, RabbitMQConsumer],
 })
 export class ProductsModule { }

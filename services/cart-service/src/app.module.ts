@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RedisModule } from './redis/redis.module';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
+import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CartModule } from './cart/cart.module';
     RedisModule,
     AuthModule,
     CartModule,
+    RabbitMQModule,
   ],
   controllers: [],
   providers: [],
